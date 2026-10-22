@@ -3,21 +3,20 @@ package com.vseslav.taskmanager.service;
 import com.vseslav.taskmanager.dto.UserDTO;
 import com.vseslav.taskmanager.entity.User;
 import com.vseslav.taskmanager.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
 
     public User create(UserDTO dto) {
-        User user = User.builder()
-                .name(dto.getName() )
-                .build();
+        User user = new User();
+        user.setName(dto.getName());
         return userRepository.save(user);
     }
 
@@ -26,7 +25,8 @@ public class UserService {
     }
 
     public User findById(long id) {
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("There's no user with id: " + id));
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("There's no user with id: " + id));
     }
 
     public User update(User user) {
