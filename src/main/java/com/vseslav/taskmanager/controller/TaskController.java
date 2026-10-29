@@ -2,6 +2,7 @@ package com.vseslav.taskmanager.controller;
 
 import com.vseslav.taskmanager.dto.TaskDTO;
 import com.vseslav.taskmanager.entity.Task;
+import com.vseslav.taskmanager.entity.TaskStatus;
 import com.vseslav.taskmanager.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,10 @@ public class TaskController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Task>> readAll() {
+    public ResponseEntity<List<Task>> readAll(@RequestParam(required = false) TaskStatus status) {
+        if (status != null) {
+            return new ResponseEntity<>(taskService.findByStatus(status), HttpStatus.OK);
+        }
         return new ResponseEntity<>(taskService.readAll(), HttpStatus.OK);
     }
 

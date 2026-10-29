@@ -20,8 +20,9 @@ public class Task {
     @Column
     private String description;
 
-    @Column
-    private Boolean done = false;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TaskStatus status = TaskStatus.TODO;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
