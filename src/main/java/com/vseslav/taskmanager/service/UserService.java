@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,11 +18,15 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final CategoryService categoryService;
 
+    @Transactional
     public User create(UserDTO dto) {
         User user = new User();
         user.setName(dto.name());
-        return userRepository.save(user);
+        User saved = userRepository.save(user);
+        categoryService.getOrCreateCommon(saved);
+        return saved;
     }
 
     @Cacheable("users")

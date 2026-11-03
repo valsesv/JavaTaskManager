@@ -19,16 +19,16 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<Category> create(@RequestBody CategoryDTO categoryDTO) {
-        return new ResponseEntity<>(categoryService.create(categoryDTO), HttpStatus.OK);
+        return new ResponseEntity<>(categoryService.create(categoryDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> readAll() {
-        return new ResponseEntity<>(categoryService.readAll(), HttpStatus.OK);
+    public ResponseEntity<List<Category>> readAll(@RequestParam Long userId) {
+        return ResponseEntity.ok(categoryService.readAll(userId));
     }
 
-    @GetMapping("/id")
-    public ResponseEntity<Category> findByID(@RequestBody Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Category> findByID(@PathVariable Long id) {
         return new ResponseEntity<>(categoryService.findById(id), HttpStatus.OK);
     }
 
@@ -37,7 +37,7 @@ public class CategoryController {
         return new ResponseEntity<>(categoryService.update(category), HttpStatus.OK);
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping("/{id}")
     public HttpStatus delete(@PathVariable Long id) {
         categoryService.delete(id);
         return HttpStatus.OK;
