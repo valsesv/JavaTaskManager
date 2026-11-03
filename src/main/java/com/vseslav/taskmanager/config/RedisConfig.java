@@ -1,6 +1,7 @@
 package com.vseslav.taskmanager.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.CachingConfigurer;
 import org.springframework.cache.interceptor.CacheErrorHandler;
@@ -18,6 +19,7 @@ import java.time.Duration;
 
 @Slf4j
 @Configuration
+@ConditionalOnProperty(name = "spring.cache.type", havingValue = "redis")
 public class RedisConfig implements CachingConfigurer {
 
     @Bean

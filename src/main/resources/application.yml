@@ -23,7 +23,7 @@ spring:
       timeout: 2s
       connect-timeout: 2s
   cache:
-    type: redis
+    type: none
     redis:
       time-to-live: 60000
 
