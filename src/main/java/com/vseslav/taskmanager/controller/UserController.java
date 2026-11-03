@@ -1,7 +1,6 @@
 package com.vseslav.taskmanager.controller;
 
 import com.vseslav.taskmanager.dto.UserDTO;
-import com.vseslav.taskmanager.entity.User;
 import com.vseslav.taskmanager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,23 +17,23 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<User> create(@RequestBody UserDTO userDTO) {
-        return new ResponseEntity<>(userService.create(userDTO), HttpStatus.OK);
+    public ResponseEntity<UserDTO> create(@RequestBody UserDTO userDTO) {
+        return new ResponseEntity<>(userService.create(userDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> readAll() {
-        return new ResponseEntity<>(userService.readAll(), HttpStatus.OK);
+    public ResponseEntity<List<UserDTO>> readAll() {
+        return ResponseEntity.ok(userService.readAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findByID(@PathVariable Long id) {
-        return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
+    public ResponseEntity<UserDTO> findByID(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.findById(id));
     }
 
     @PutMapping
-    public ResponseEntity<User> update(@RequestBody User user) {
-        return new ResponseEntity<>(userService.update(user), HttpStatus.OK);
+    public ResponseEntity<UserDTO> update(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.update(userDTO));
     }
 
     @DeleteMapping("/{id}")

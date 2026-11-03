@@ -1,4 +1,6 @@
 package com.vseslav.taskmanager.dto;
 
-public record UserDTO(String name) {
+import java.io.Serializable;
+
+public record UserDTO(Long id, String name) implements Serializable {
 }
