@@ -1,0 +1,14 @@
+$kind: http-request
+method: POST
+url: http://localhost:8080/api/tasks
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Buy Iphone",
+      "description": "from store",
+      "userId": 1
+    }
+order: 3200

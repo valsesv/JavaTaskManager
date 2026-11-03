@@ -1,0 +1,13 @@
+$kind: http-request
+method: POST
+url: http://localhost:8080/api/categories
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Purchase",
+      "userId": 1
+    }
+order: 2100

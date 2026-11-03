@@ -1,0 +1,4 @@
+$kind: http-request
+method: DELETE
+url: http://localhost:8080/api/tasks/1
+order: 3500

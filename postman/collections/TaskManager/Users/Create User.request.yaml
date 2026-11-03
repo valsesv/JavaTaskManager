@@ -1,0 +1,12 @@
+$kind: http-request
+method: POST
+url: http://localhost:8080/api/users
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Alice"
+    }
+order: 1100

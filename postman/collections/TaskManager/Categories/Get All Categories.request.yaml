@@ -1,0 +1,4 @@
+$kind: http-request
+method: GET
+url: http://localhost:8080/api/categories?userId=1
+order: 2000

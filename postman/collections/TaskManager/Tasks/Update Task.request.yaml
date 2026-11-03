@@ -1,0 +1,15 @@
+$kind: http-request
+method: PUT
+url: http://localhost:8080/api/tasks
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "id": 1,
+      "name": "Buy milk",
+      "description": "from store",
+      "status": "DONE"
+    }
+order: 3400
