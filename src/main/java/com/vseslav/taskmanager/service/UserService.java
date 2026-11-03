@@ -20,7 +20,7 @@ public class UserService {
 
     public User create(UserDTO dto) {
         User user = new User();
-        user.setName(dto.getName());
+        user.setName(dto.name());
         return userRepository.save(user);
     }
 

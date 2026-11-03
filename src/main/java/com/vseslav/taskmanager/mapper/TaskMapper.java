@@ -8,11 +8,11 @@ public class TaskMapper {
 
     public static Task toEntity(TaskDTO dto) {
         Task task = new Task();
-        task.setName(dto.getName());
-        task.setDescription(dto.getDescription());
-        task.setStatus(dto.getStatus() != null ? dto.getStatus() : TaskStatus.TODO);
-        task.setUser(dto.getUser());
-        task.setCategory(dto.getCategory());
+        task.setName(dto.name());
+        task.setDescription(dto.description());
+        task.setStatus(dto.status() != null ? dto.status() : TaskStatus.TODO);
+        task.setUser(dto.user());
+        task.setCategory(dto.category());
         return task;
     }
 }

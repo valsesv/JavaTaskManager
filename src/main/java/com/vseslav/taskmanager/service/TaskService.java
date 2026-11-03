@@ -21,7 +21,7 @@ public class TaskService {
     private final TaskRepository taskRepository;
 
     public Task create(TaskDTO dto) {
-        if (dto.getName() == null || dto.getName().isBlank()) {
+        if (dto.name() == null || dto.name().isBlank()) {
             throw new BadRequestException("Task name is required");
         }
         Task task = TaskMapper.toEntity(dto);

@@ -16,7 +16,7 @@ public class CategoryService {
 
     public Category create(CategoryDTO dto) {
         Category category = new Category();
-        category.setName(dto.getName());
+        category.setName(dto.name());
         return categoryRepository.save(category);
     }
 

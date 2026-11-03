@@ -1,4 +1,5 @@
 /Users/vseslav/Documents/GitHub/Java/SimpleTaskManager/src/main/java/com/vseslav/taskmanager/SimpleTaskManagerApplication.java
+/Users/vseslav/Documents/GitHub/Java/SimpleTaskManager/src/main/java/com/vseslav/taskmanager/config/RedisConfig.java
 /Users/vseslav/Documents/GitHub/Java/SimpleTaskManager/src/main/java/com/vseslav/taskmanager/controller/CategoryController.java
 /Users/vseslav/Documents/GitHub/Java/SimpleTaskManager/src/main/java/com/vseslav/taskmanager/controller/TaskController.java
 /Users/vseslav/Documents/GitHub/Java/SimpleTaskManager/src/main/java/com/vseslav/taskmanager/controller/UserController.java
