@@ -8,8 +8,10 @@ body:
   content: |-
     {
       "id": 1,
-      "name": "Buy milk",
+      "name": "Buy water",
       "description": "from store",
-      "status": "DONE"
+      "status": "DONE",
+      "userId": 1,
+      "categoryId": 1
     }
 order: 3400

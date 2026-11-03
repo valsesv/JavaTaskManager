@@ -7,8 +7,10 @@ body:
   type: json
   content: |-
     {
-      "name": "Buy Iphone",
+      "name": "Buy water",
       "description": "from store",
-      "userId": 1
+      "status": "TODO",
+      "userId": 1,
+      "categoryId": 2
     }
 order: 3200
