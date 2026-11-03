@@ -12,4 +12,12 @@ public class CategoryMapper {
         category.setUser(user);
         return category;
     }
+
+    public static CategoryDTO toDto(Category category) {
+        return new CategoryDTO(
+                category.getId(),
+                category.getName(),
+                category.getUser() != null ? category.getUser().getId() : null
+        );
+    }
 }

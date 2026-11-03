@@ -1,4 +1,4 @@
 package com.vseslav.taskmanager.dto;
 
-public record CategoryDTO(String name, Long userId) {
+public record CategoryDTO(Long id, String name, Long userId) {
 }

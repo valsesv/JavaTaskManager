@@ -1,7 +1,6 @@
 package com.vseslav.taskmanager.controller;
 
 import com.vseslav.taskmanager.dto.CategoryDTO;
-import com.vseslav.taskmanager.entity.Category;
 import com.vseslav.taskmanager.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,23 +17,23 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<Category> create(@RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<CategoryDTO> create(@RequestBody CategoryDTO categoryDTO) {
         return new ResponseEntity<>(categoryService.create(categoryDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> readAll(@RequestParam Long userId) {
+    public ResponseEntity<List<CategoryDTO>> readAll(@RequestParam Long userId) {
         return ResponseEntity.ok(categoryService.readAll(userId));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> findByID(@PathVariable Long id) {
-        return new ResponseEntity<>(categoryService.findById(id), HttpStatus.OK);
+    public ResponseEntity<CategoryDTO> findByID(@PathVariable Long id) {
+        return ResponseEntity.ok(categoryService.findById(id));
     }
 
     @PutMapping
-    public ResponseEntity<Category> update(@RequestBody Category category) {
-        return new ResponseEntity<>(categoryService.update(category), HttpStatus.OK);
+    public ResponseEntity<CategoryDTO> update(@RequestBody CategoryDTO categoryDTO) {
+        return ResponseEntity.ok(categoryService.update(categoryDTO));
     }
 
     @DeleteMapping("/{id}")
