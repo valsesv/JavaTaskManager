@@ -17,4 +17,15 @@ public class TaskMapper {
         task.setCategory(category);
         return task;
     }
+
+    public static TaskDTO toDto(Task task) {
+        return new TaskDTO(
+                task.getId(),
+                task.getName(),
+                task.getDescription(),
+                task.getStatus(),
+                task.getUser() != null ? task.getUser().getId() : null,
+                task.getCategory() != null ? task.getCategory().getId() : null
+        );
+    }
 }

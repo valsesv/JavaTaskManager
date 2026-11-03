@@ -1,7 +1,6 @@
 package com.vseslav.taskmanager.controller;
 
 import com.vseslav.taskmanager.dto.TaskDTO;
-import com.vseslav.taskmanager.entity.Task;
 import com.vseslav.taskmanager.entity.TaskStatus;
 import com.vseslav.taskmanager.service.TaskService;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +18,12 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping
-    public ResponseEntity<Task> create(@RequestBody TaskDTO taskDTO) {
+    public ResponseEntity<TaskDTO> create(@RequestBody TaskDTO taskDTO) {
         return new ResponseEntity<>(taskService.create(taskDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<Task>> readAll(
+    public ResponseEntity<List<TaskDTO>> readAll(
             @RequestParam(required = false) Long userId,
             @RequestParam(required = false) TaskStatus status) {
         if (userId != null) {
@@ -37,13 +36,13 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Task> findByID(@PathVariable Long id) {
+    public ResponseEntity<TaskDTO> findByID(@PathVariable Long id) {
         return new ResponseEntity<>(taskService.findById(id), HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<Task> update(@RequestBody Task task) {
-        return new ResponseEntity<>(taskService.update(task), HttpStatus.OK);
+    public ResponseEntity<TaskDTO> update(@RequestBody TaskDTO taskDTO) {
+        return new ResponseEntity<>(taskService.update(taskDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
