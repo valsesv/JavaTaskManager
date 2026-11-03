@@ -27,8 +27,8 @@ public class UserController {
         return new ResponseEntity<>(userService.readAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/id")
-    public ResponseEntity<User> findByID(@RequestBody Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<User> findByID(@PathVariable Long id) {
         return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
     }
 
@@ -37,7 +37,7 @@ public class UserController {
         return new ResponseEntity<>(userService.update(user), HttpStatus.OK);
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping("/{id}")
     public HttpStatus delete(@PathVariable Long id) {
         userService.delete(id);
         return HttpStatus.OK;
