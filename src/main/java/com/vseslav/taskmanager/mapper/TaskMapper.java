@@ -6,6 +6,8 @@ import com.vseslav.taskmanager.entity.Task;
 import com.vseslav.taskmanager.entity.TaskStatus;
 import com.vseslav.taskmanager.entity.User;
 
+import java.time.LocalDate;
+
 public class TaskMapper {
 
     public static Task toEntity(TaskDTO dto, User user, Category category) {
@@ -13,6 +15,7 @@ public class TaskMapper {
         task.setName(dto.name());
         task.setDescription(dto.description());
         task.setStatus(dto.status() != null ? dto.status() : TaskStatus.TODO);
+        task.setCreatedAt(dto.createdAt() != null ? dto.createdAt() : LocalDate.now());
         task.setUser(user);
         task.setCategory(category);
         return task;
@@ -24,6 +27,7 @@ public class TaskMapper {
                 task.getName(),
                 task.getDescription(),
                 task.getStatus(),
+                task.getCreatedAt(),
                 task.getUser() != null ? task.getUser().getId() : null,
                 task.getCategory() != null ? task.getCategory().getId() : null
         );

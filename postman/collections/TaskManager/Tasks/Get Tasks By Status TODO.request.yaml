@@ -1,4 +1,4 @@
 $kind: http-request
 method: GET
-url: http://localhost:8080/api/tasks?status=TODO
+url: http://localhost:8080/api/tasks?userId=1&status=TODO
 order: 3100

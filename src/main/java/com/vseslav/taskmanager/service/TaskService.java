@@ -7,6 +7,10 @@ import com.vseslav.taskmanager.entity.TaskStatus;
 import com.vseslav.taskmanager.entity.User;
 import com.vseslav.taskmanager.exception.BadRequestException;
 import com.vseslav.taskmanager.exception.ResourceNotFoundException;
+import com.vseslav.taskmanager.filter.DateCriteria;
+import com.vseslav.taskmanager.filter.DateTaskFilter;
+import com.vseslav.taskmanager.filter.StatusCriteria;
+import com.vseslav.taskmanager.filter.StatusTaskFilter;
 import com.vseslav.taskmanager.mapper.TaskMapper;
 import com.vseslav.taskmanager.repository.CategoryRepository;
 import com.vseslav.taskmanager.repository.TaskRepository;
@@ -16,6 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -27,6 +33,8 @@ public class TaskService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final CategoryService categoryService;
+    private final StatusTaskFilter statusTaskFilter;
+    private final DateTaskFilter dateTaskFilter;
 
     @Transactional
     public TaskDTO create(TaskDTO dto) {
@@ -59,6 +67,7 @@ public class TaskService {
         task.setName(dto.name());
         task.setDescription(dto.description());
         task.setStatus(dto.status() != null ? dto.status() : TaskStatus.TODO);
+        task.setCreatedAt(dto.createdAt() != null ? dto.createdAt() : task.getCreatedAt());
         task.setUser(user);
         task.setCategory(category);
 
@@ -78,25 +87,30 @@ public class TaskService {
     }
 
     @Transactional(readOnly = true)
-    public List<TaskDTO> readAll() {
-        return taskRepository.findAll().stream().map(TaskMapper::toDto).toList();
-    }
+    public List<TaskDTO> find(Long userId, TaskStatus status, LocalDate from, LocalDate to) {
+        if (userId == null) {
+            throw new BadRequestException("userId is required");
+        }
+        if (!userRepository.existsById(userId)) {
+            throw new BadRequestException("User not found: " + userId);
+        }
 
-    @Transactional(readOnly = true)
-    public List<TaskDTO> findByStatus(TaskStatus status) {
-        return taskRepository.findByStatus(status).stream().map(TaskMapper::toDto).toList();
-    }
+        List<Task> tasks = taskRepository.findByUser_Id(userId);
+        tasks = statusTaskFilter.apply(tasks, new StatusCriteria(status));
+        tasks = dateTaskFilter.apply(tasks, new DateCriteria(from, to));
 
-    @Transactional(readOnly = true)
-    public List<TaskDTO> findByUserId(Long userId) {
-        return taskRepository.findByUser_Id(userId).stream().map(TaskMapper::toDto).toList();
+        List<TaskDTO> result = new ArrayList<>();
+        for (Task task : tasks) {
+            result.add(TaskMapper.toDto(task));
+        }
+        return result;
     }
 
     @Transactional(readOnly = true)
     public TaskDTO findById(Long id) {
-        return taskRepository.findById(id)
-                .map(TaskMapper::toDto)
+        Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found: " + id));
+        return TaskMapper.toDto(task);
     }
 
     public void delete(Long id) {

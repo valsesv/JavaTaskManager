@@ -3,6 +3,8 @@ package com.vseslav.taskmanager.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "tasks")
 @Getter
@@ -23,6 +25,9 @@ public class Task {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TaskStatus status = TaskStatus.TODO;
+
+    @Column(name = "created_at", nullable = false)
+    private LocalDate createdAt = LocalDate.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

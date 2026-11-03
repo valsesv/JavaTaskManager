@@ -4,10 +4,12 @@ import com.vseslav.taskmanager.dto.TaskDTO;
 import com.vseslav.taskmanager.entity.TaskStatus;
 import com.vseslav.taskmanager.service.TaskService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -24,15 +26,11 @@ public class TaskController {
 
     @GetMapping
     public ResponseEntity<List<TaskDTO>> readAll(
-            @RequestParam(required = false) Long userId,
-            @RequestParam(required = false) TaskStatus status) {
-        if (userId != null) {
-            return ResponseEntity.ok(taskService.findByUserId(userId));
-        }
-        if (status != null) {
-            return ResponseEntity.ok(taskService.findByStatus(status));
-        }
-        return ResponseEntity.ok(taskService.readAll());
+            @RequestParam Long userId,
+            @RequestParam(required = false) TaskStatus status,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
+        return ResponseEntity.ok(taskService.find(userId, status, from, to));
     }
 
     @GetMapping("/{id}")

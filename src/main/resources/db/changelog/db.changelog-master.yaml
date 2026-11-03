@@ -5,3 +5,5 @@ databaseChangeLog:
       file: db/changelog/changes/002-create-categories.sql
   - include:
       file: db/changelog/changes/003-create-tasks.sql
+  - include:
+      file: db/changelog/changes/004-add-tasks-created-at.sql
