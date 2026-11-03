@@ -1,16 +1,6 @@
 --liquibase formatted sql
 
---changeset vseslav:001-create-tables
-CREATE TABLE users (
-    id   BIGSERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE categories (
-    id   BIGSERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE
-);
-
+--changeset vseslav:003-create-tasks
 CREATE TABLE tasks (
     id          BIGSERIAL PRIMARY KEY,
     name        VARCHAR(255) NOT NULL,
