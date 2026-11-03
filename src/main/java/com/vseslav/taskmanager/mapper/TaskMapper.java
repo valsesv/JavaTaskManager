@@ -1,18 +1,20 @@
 package com.vseslav.taskmanager.mapper;
 
 import com.vseslav.taskmanager.dto.TaskDTO;
+import com.vseslav.taskmanager.entity.Category;
 import com.vseslav.taskmanager.entity.Task;
 import com.vseslav.taskmanager.entity.TaskStatus;
+import com.vseslav.taskmanager.entity.User;
 
 public class TaskMapper {
 
-    public static Task toEntity(TaskDTO dto) {
+    public static Task toEntity(TaskDTO dto, User user, Category category) {
         Task task = new Task();
         task.setName(dto.name());
         task.setDescription(dto.description());
         task.setStatus(dto.status() != null ? dto.status() : TaskStatus.TODO);
-        task.setUser(dto.user());
-        task.setCategory(dto.category());
+        task.setUser(user);
+        task.setCategory(category);
         return task;
     }
 }

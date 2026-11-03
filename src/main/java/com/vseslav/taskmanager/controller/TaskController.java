@@ -20,19 +20,24 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<Task> create(@RequestBody TaskDTO taskDTO) {
-        return new ResponseEntity<>(taskService.create(taskDTO), HttpStatus.OK);
+        return new ResponseEntity<>(taskService.create(taskDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<Task>> readAll(@RequestParam(required = false) TaskStatus status) {
-        if (status != null) {
-            return new ResponseEntity<>(taskService.findByStatus(status), HttpStatus.OK);
+    public ResponseEntity<List<Task>> readAll(
+            @RequestParam(required = false) Long userId,
+            @RequestParam(required = false) TaskStatus status) {
+        if (userId != null) {
+            return ResponseEntity.ok(taskService.findByUserId(userId));
         }
-        return new ResponseEntity<>(taskService.readAll(), HttpStatus.OK);
+        if (status != null) {
+            return ResponseEntity.ok(taskService.findByStatus(status));
+        }
+        return ResponseEntity.ok(taskService.readAll());
     }
 
-    @GetMapping("/id")
-    public ResponseEntity<Task> findByID(@RequestBody Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Task> findByID(@PathVariable Long id) {
         return new ResponseEntity<>(taskService.findById(id), HttpStatus.OK);
     }
 
@@ -41,7 +46,7 @@ public class TaskController {
         return new ResponseEntity<>(taskService.update(task), HttpStatus.OK);
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping("/{id}")
     public HttpStatus delete(@PathVariable Long id) {
         taskService.delete(id);
         return HttpStatus.OK;

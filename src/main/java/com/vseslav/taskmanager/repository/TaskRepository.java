@@ -9,4 +9,6 @@ import java.util.List;
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findByStatus(TaskStatus status);
+
+    List<Task> findByUser_Id(Long userId);
 }
