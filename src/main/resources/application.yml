@@ -40,7 +40,7 @@ springdoc:
 
 app:
   pagination:
-    page-size: 10
+    page-size: 5
   kafka:
     topic:
       tasks: task-events
