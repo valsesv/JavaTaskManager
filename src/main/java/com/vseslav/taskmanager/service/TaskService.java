@@ -9,10 +9,8 @@ import com.vseslav.taskmanager.entity.User;
 import com.vseslav.taskmanager.event.TaskEventType;
 import com.vseslav.taskmanager.exception.BadRequestException;
 import com.vseslav.taskmanager.exception.ResourceNotFoundException;
-import com.vseslav.taskmanager.filter.DateCriteria;
-import com.vseslav.taskmanager.filter.DateTaskFilter;
-import com.vseslav.taskmanager.filter.StatusCriteria;
-import com.vseslav.taskmanager.filter.StatusTaskFilter;
+import com.vseslav.taskmanager.filter.TaskQueryStrategy;
+import com.vseslav.taskmanager.filter.TaskSearchRequest;
 import com.vseslav.taskmanager.kafka.TaskEventProducer;
 import com.vseslav.taskmanager.mapper.TaskMapper;
 import com.vseslav.taskmanager.repository.CategoryRepository;
@@ -37,8 +35,7 @@ public class TaskService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final CategoryService categoryService;
-    private final StatusTaskFilter statusTaskFilter;
-    private final DateTaskFilter dateTaskFilter;
+    private final List<TaskQueryStrategy<?>> queryStrategies;
     private final TaskEventProducer taskEventProducer;
 
     @Value("${app.pagination.page-size}")
@@ -111,9 +108,8 @@ public class TaskService {
             throw new BadRequestException("page must be >= 0");
         }
 
-        List<Task> tasks = taskRepository.findByUser_Id(userId);
-        tasks = statusTaskFilter.apply(tasks, new StatusCriteria(status));
-        tasks = dateTaskFilter.apply(tasks, new DateCriteria(from, to));
+        TaskSearchRequest request = new TaskSearchRequest(status, from, to);
+        List<Task> tasks = execute(findStrategy(request), userId, request);
 
         int totalElements = tasks.size();
         int totalPages = totalElements == 0 ? 0 : (totalElements + pageSize - 1) / pageSize;
@@ -128,6 +124,19 @@ public class TaskService {
         }
 
         return new PageResponse<>(content, page, pageSize, totalElements, totalPages);
+    }
+
+    private TaskQueryStrategy<?> findStrategy(TaskSearchRequest request) {
+        for (TaskQueryStrategy<?> strategy : queryStrategies) {
+            if (strategy.supports(request)) {
+                return strategy;
+            }
+        }
+        throw new BadRequestException("No query strategy for given filters");
+    }
+
+    private <C> List<Task> execute(TaskQueryStrategy<C> strategy, Long userId, TaskSearchRequest request) {
+        return strategy.find(userId, strategy.toCriteria(request));
     }
 
     @Transactional(readOnly = true)

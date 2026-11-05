@@ -34,8 +34,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
               AND (:from IS NULL OR t.createdAt >= :from)
               AND (:to IS NULL OR t.createdAt <= :to)
             """)
-    List<Task> findByUserIdAndFilters(@Param("userId") Long userId,
-                                      @Param("status") TaskStatus status,
-                                      @Param("from") LocalDate from,
-                                      @Param("to") LocalDate to);
+    List<Task> findByUserIdAndStatusAndPeriod(@Param("userId") Long userId,
+                                              @Param("status") TaskStatus status,
+                                              @Param("from") LocalDate from,
+                                              @Param("to") LocalDate to);
 }

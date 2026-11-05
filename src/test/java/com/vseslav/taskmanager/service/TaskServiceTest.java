@@ -8,8 +8,7 @@ import com.vseslav.taskmanager.entity.User;
 import com.vseslav.taskmanager.event.TaskEventType;
 import com.vseslav.taskmanager.exception.BadRequestException;
 import com.vseslav.taskmanager.exception.ResourceNotFoundException;
-import com.vseslav.taskmanager.filter.DateTaskFilter;
-import com.vseslav.taskmanager.filter.StatusTaskFilter;
+import com.vseslav.taskmanager.filter.TaskQueryStrategy;
 import com.vseslav.taskmanager.kafka.TaskEventProducer;
 import com.vseslav.taskmanager.repository.CategoryRepository;
 import com.vseslav.taskmanager.repository.TaskRepository;
@@ -23,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,9 +43,7 @@ class TaskServiceTest {
     @Mock
     private CategoryService categoryService;
     @Mock
-    private StatusTaskFilter statusTaskFilter;
-    @Mock
-    private DateTaskFilter dateTaskFilter;
+    private TaskQueryStrategy queryStrategy;
     @Mock
     private TaskEventProducer taskEventProducer;
 
@@ -55,6 +53,7 @@ class TaskServiceTest {
     @BeforeEach
     void setUp() {
         ReflectionTestUtils.setField(taskService, "pageSize", 10);
+        ReflectionTestUtils.setField(taskService, "queryStrategies", List.of(queryStrategy));
     }
 
     @Test
