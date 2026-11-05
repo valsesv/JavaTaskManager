@@ -1,5 +1,6 @@
 package com.vseslav.taskmanager.controller;
 
+import com.vseslav.taskmanager.dto.PageResponse;
 import com.vseslav.taskmanager.dto.TaskDTO;
 import com.vseslav.taskmanager.entity.TaskStatus;
 import com.vseslav.taskmanager.service.TaskService;
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequestMapping("api/tasks")
@@ -25,12 +25,13 @@ public class TaskController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TaskDTO>> readAll(
+    public ResponseEntity<PageResponse<TaskDTO>> readAll(
             @RequestParam Long userId,
             @RequestParam(required = false) TaskStatus status,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
-        return ResponseEntity.ok(taskService.find(userId, status, from, to));
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
+            @RequestParam(defaultValue = "0") int page) {
+        return ResponseEntity.ok(taskService.find(userId, status, from, to, page));
     }
 
     @GetMapping("/{id}")

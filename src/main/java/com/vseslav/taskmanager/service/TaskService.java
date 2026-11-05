@@ -1,5 +1,6 @@
 package com.vseslav.taskmanager.service;
 
+import com.vseslav.taskmanager.dto.PageResponse;
 import com.vseslav.taskmanager.dto.TaskDTO;
 import com.vseslav.taskmanager.entity.Category;
 import com.vseslav.taskmanager.entity.Task;
@@ -17,6 +18,7 @@ import com.vseslav.taskmanager.repository.TaskRepository;
 import com.vseslav.taskmanager.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,9 @@ public class TaskService {
     private final CategoryService categoryService;
     private final StatusTaskFilter statusTaskFilter;
     private final DateTaskFilter dateTaskFilter;
+
+    @Value("${app.pagination.page-size}")
+    private int pageSize;
 
     @Transactional
     public TaskDTO create(TaskDTO dto) {
@@ -87,23 +92,34 @@ public class TaskService {
     }
 
     @Transactional(readOnly = true)
-    public List<TaskDTO> find(Long userId, TaskStatus status, LocalDate from, LocalDate to) {
+    public PageResponse<TaskDTO> find(Long userId, TaskStatus status, LocalDate from, LocalDate to, int page) {
         if (userId == null) {
             throw new BadRequestException("userId is required");
         }
         if (!userRepository.existsById(userId)) {
             throw new BadRequestException("User not found: " + userId);
         }
+        if (page < 0) {
+            throw new BadRequestException("page must be >= 0");
+        }
 
         List<Task> tasks = taskRepository.findByUser_Id(userId);
         tasks = statusTaskFilter.apply(tasks, new StatusCriteria(status));
         tasks = dateTaskFilter.apply(tasks, new DateCriteria(from, to));
 
-        List<TaskDTO> result = new ArrayList<>();
-        for (Task task : tasks) {
-            result.add(TaskMapper.toDto(task));
+        int totalElements = tasks.size();
+        int totalPages = totalElements == 0 ? 0 : (totalElements + pageSize - 1) / pageSize;
+
+        int fromIndex = page * pageSize;
+        List<TaskDTO> content = new ArrayList<>();
+        if (fromIndex < totalElements) {
+            int toIndex = Math.min(fromIndex + pageSize, totalElements);
+            for (int i = fromIndex; i < toIndex; i++) {
+                content.add(TaskMapper.toDto(tasks.get(i)));
+            }
         }
-        return result;
+
+        return new PageResponse<>(content, page, pageSize, totalElements, totalPages);
     }
 
     @Transactional(readOnly = true)
