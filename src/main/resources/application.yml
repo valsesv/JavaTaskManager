@@ -1,6 +1,13 @@
 spring:
   application:
     name: SimpleTaskManager
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
   datasource:
     url: jdbc:postgresql://localhost:5432/taskmanager
     username: user
@@ -34,3 +41,6 @@ springdoc:
 app:
   pagination:
     page-size: 10
+  kafka:
+    topic:
+      tasks: task-events

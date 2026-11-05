@@ -6,12 +6,14 @@ import com.vseslav.taskmanager.entity.Category;
 import com.vseslav.taskmanager.entity.Task;
 import com.vseslav.taskmanager.entity.TaskStatus;
 import com.vseslav.taskmanager.entity.User;
+import com.vseslav.taskmanager.event.TaskEventType;
 import com.vseslav.taskmanager.exception.BadRequestException;
 import com.vseslav.taskmanager.exception.ResourceNotFoundException;
 import com.vseslav.taskmanager.filter.DateCriteria;
 import com.vseslav.taskmanager.filter.DateTaskFilter;
 import com.vseslav.taskmanager.filter.StatusCriteria;
 import com.vseslav.taskmanager.filter.StatusTaskFilter;
+import com.vseslav.taskmanager.kafka.TaskEventProducer;
 import com.vseslav.taskmanager.mapper.TaskMapper;
 import com.vseslav.taskmanager.repository.CategoryRepository;
 import com.vseslav.taskmanager.repository.TaskRepository;
@@ -37,6 +39,7 @@ public class TaskService {
     private final CategoryService categoryService;
     private final StatusTaskFilter statusTaskFilter;
     private final DateTaskFilter dateTaskFilter;
+    private final TaskEventProducer taskEventProducer;
 
     @Value("${app.pagination.page-size}")
     private int pageSize;
@@ -53,7 +56,10 @@ public class TaskService {
 
         Task saved = taskRepository.save(TaskMapper.toEntity(dto, user, category));
         log.info("Creating task: {}", saved.getName());
-        return TaskMapper.toDto(saved);
+
+        TaskDTO result = TaskMapper.toDto(saved);
+        taskEventProducer.send(TaskEventType.CREATED, result);
+        return result;
     }
 
     @Transactional
@@ -76,7 +82,9 @@ public class TaskService {
         task.setUser(user);
         task.setCategory(category);
 
-        return TaskMapper.toDto(taskRepository.save(task));
+        TaskDTO result = TaskMapper.toDto(taskRepository.save(task));
+        taskEventProducer.send(TaskEventType.UPDATED, result);
+        return result;
     }
 
     private Category resolveCategory(Long categoryId, User user) {
@@ -130,6 +138,10 @@ public class TaskService {
     }
 
     public void delete(Long id) {
+        if (!taskRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Task not found: " + id);
+        }
         taskRepository.deleteById(id);
+        taskEventProducer.sendDeleted(id);
     }
 }
